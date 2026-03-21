@@ -2,7 +2,9 @@ package com.neerajbisht.projects.AirBnB.entity;
 
 import com.neerajbisht.projects.AirBnB.entity.enums.Role;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Set;
@@ -11,6 +13,8 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name = "app_user")
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
