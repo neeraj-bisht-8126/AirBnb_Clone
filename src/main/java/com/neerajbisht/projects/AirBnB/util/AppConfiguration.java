@@ -1,4 +1,4 @@
-package com.neerajbisht.projects.AirBnB;
+package com.neerajbisht.projects.AirBnB.util;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

@@ -3,6 +3,7 @@ package com.neerajbisht.projects.AirBnB.controller;
 
 import com.neerajbisht.projects.AirBnB.dto.HotelDTO;
 import com.neerajbisht.projects.AirBnB.dto.HotelInfoDTO;
+import com.neerajbisht.projects.AirBnB.dto.HotelPriceDTO;
 import com.neerajbisht.projects.AirBnB.dto.HotelSearchRequest;
 import com.neerajbisht.projects.AirBnB.service.HotelService;
 import com.neerajbisht.projects.AirBnB.service.InventoryService;
@@ -22,8 +23,8 @@ public class HotelBrowserController {
 private final HotelService hotelService;
 
     @GetMapping("/search")
-    public ResponseEntity<Page<HotelDTO>> searchHotels(@RequestBody HotelSearchRequest hotelSearchRequest){
-        Page<HotelDTO> page = inventoryService.searchHotels(hotelSearchRequest);
+    public ResponseEntity<Page<HotelPriceDTO>> searchHotels(@RequestBody HotelSearchRequest hotelSearchRequest){
+        var page = inventoryService.searchHotels(hotelSearchRequest);
         return ResponseEntity.ok(page);
     }
 
