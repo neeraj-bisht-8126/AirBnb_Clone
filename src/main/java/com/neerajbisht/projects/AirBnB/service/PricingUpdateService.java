@@ -1,4 +1,4 @@
-﻿package com.neerajbisht.projects.AirBnB.service;
+package com.neerajbisht.projects.AirBnB.service;
 
 import com.neerajbisht.projects.AirBnB.entity.Hotel;
 import com.neerajbisht.projects.AirBnB.entity.HotelMinPrice;
@@ -7,11 +7,9 @@ import com.neerajbisht.projects.AirBnB.repository.HotelMinPriceRepository;
 import com.neerajbisht.projects.AirBnB.repository.HotelRepository;
 import com.neerajbisht.projects.AirBnB.repository.InventoryRepository;
 import com.neerajbisht.projects.AirBnB.strategy.PricingService;
-import com.neerajbisht.projects.AirBnB.strategy.PricingStrategy;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -40,7 +38,7 @@ public class PricingUpdateService {
 
     // Thread Scheduled cron expression search website for more info currently this is update
     // Every 1 hours 0->sec 0->min *->hour *->day *->week *->month.
-    // if want to set every 5 sec then cron= "*/5 * * * * *". for 5 min then cron= "0 */5 * * * *".
+    // if we want to set every 5 sec then cron= "*/5 * * * * *". for 5 min then cron= "0 */5 * * * *".
     @Scheduled(cron = "0 0 * * * *")
     public void updatePrices(){
         int page = 0;

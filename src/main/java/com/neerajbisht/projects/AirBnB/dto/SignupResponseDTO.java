@@ -1,6 +1,5 @@
 package com.neerajbisht.projects.AirBnB.dto;
 
-import com.neerajbisht.projects.AirBnB.entity.Hotel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class HotelPriceDTO {
-    private Hotel hotel;
-    private Double price;
-
+public class SignupResponseDTO {
+    private Long id;
+    private String email;
 }

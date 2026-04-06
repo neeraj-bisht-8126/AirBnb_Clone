@@ -5,13 +5,15 @@ import com.neerajbisht.projects.AirBnB.dto.HotelInfoDTO;
 import com.neerajbisht.projects.AirBnB.dto.RoomDTO;
 import com.neerajbisht.projects.AirBnB.entity.Hotel;
 import com.neerajbisht.projects.AirBnB.entity.Room;
+import com.neerajbisht.projects.AirBnB.entity.User;
 import com.neerajbisht.projects.AirBnB.exception.ResourceNotFoundException;
+import com.neerajbisht.projects.AirBnB.exception.UnAuthorizeException;
 import com.neerajbisht.projects.AirBnB.repository.HotelRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jspecify.annotations.Nullable;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +33,8 @@ public class HotelServiceImpl implements HotelService{
         log.info("Creating a new hotel with name: {}", hotelDTO.getName());
         Hotel hotel= modelMapper.map(hotelDTO,Hotel.class);
         hotel.setActive(false);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        hotel.setOwner(user);
         hotel = hotelRepository.save(hotel);
         log.info("Created a new hotel with ID: {}", hotelDTO.getId());
         return modelMapper.map(hotel, HotelDTO.class);
@@ -43,20 +47,27 @@ public class HotelServiceImpl implements HotelService{
                 .findById(id)
                 .orElseThrow(()->
                 new ResourceNotFoundException("Hotel not found with Id: "+ id));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!user.equals(hotel.getOwner())) throw new UnAuthorizeException("Current User is not own the hotel with hotelId "+id);
         return modelMapper.map(hotel, HotelDTO.class);
     }
 
     @Override
     public HotelDTO updateHotelById(Long id, HotelDTO hotelDTO) {
-    log.info("Uddating the hotel with Id: {}",id);
-    Hotel hotel = hotelRepository
-            .findById(id)
-            .orElseThrow(()->
-                    new ResourceNotFoundException("Hotel not found with Id: "+id));
-    modelMapper.map(hotelDTO,hotel);
-    hotel.setId(id);
-    hotel = hotelRepository.save(hotel);
-    return modelMapper.map(hotel, HotelDTO.class);
+        log.info("Uddating the hotel with Id: {}", id);
+        Hotel hotel = hotelRepository
+                .findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Hotel not found with Id: " + id));
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!user.equals(hotel.getOwner()))
+            throw new UnAuthorizeException("Current User is not own the hotel with hotelId " + id);
+
+        modelMapper.map(hotelDTO, hotel);
+        hotel.setId(id);
+        hotel = hotelRepository.save(hotel);
+        return modelMapper.map(hotel, HotelDTO.class);
     }
 
     @Override
@@ -64,6 +75,10 @@ public class HotelServiceImpl implements HotelService{
     public void deleteHotelById(Long id) {
         Hotel hotel = hotelRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException("Hotel not found with id: "+id));
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!user.equals(hotel.getOwner()))
+            throw new UnAuthorizeException("Current User is not own the hotel with hotelId " + id);
 
         for(Room room: hotel.getRooms()){
 
@@ -85,6 +100,10 @@ public class HotelServiceImpl implements HotelService{
                 .orElseThrow(()->
                         new ResourceNotFoundException("Hotel not found with Id: "+hotelId)
                 );
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!user.equals(hotel.getOwner()))
+            throw new UnAuthorizeException("Current User is not own the hotel with hotelId " + hotelId);
+
         hotel.setActive(true);
 
         for (Room room: hotel.getRooms()){
